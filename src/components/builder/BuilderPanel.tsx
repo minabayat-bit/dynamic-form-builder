@@ -1,6 +1,6 @@
 import { createField } from "../../utils/feildFactory";
 import { useFormBuilderStore } from "../../store/formStore";
-
+import type { FieldTypes } from "../../types/formTypes";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 
 import {
@@ -8,9 +8,12 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import SortableFieldItem from "../SortableFieldItem";
+import SortableFieldItem from "./SortableFieldItem";
 
-const fieldButtons = [
+const fieldButtons: {
+  label: string;
+  type: FieldTypes;
+}[] = [
   {
     label: "Add Text",
     type: "text",
@@ -57,15 +60,14 @@ export default function BuilderPanel() {
 
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <div className="space-y-4 rounded-lg border border-zinc-50 p-4 overflow-y-auto max-h-[800px]">
+      <div className="space-y-4 rounded-lg border border-zinc-50 p-4 overflow-y-auto max-h-200">
         <h2 className="text-xl text-zinc-50 font-bold">Form Builder</h2>
 
-        
         <div className="flex flex-wrap gap-2">
           {fieldButtons.map((btn) => (
             <button
               key={btn.type}
-              onClick={() => addField(createField(btn.type as any))}
+              onClick={() => addField(createField(btn.type))}
               className="bg-zinc-500 rounded-2xl p-2 px-4 text-sm hover:scale-90 cursor-pointer duration-150 text-white"
             >
               {btn.label}
@@ -73,7 +75,6 @@ export default function BuilderPanel() {
           ))}
         </div>
 
-        
         <SortableContext
           items={fields.map((f) => f.id)}
           strategy={verticalListSortingStrategy}
@@ -83,10 +84,8 @@ export default function BuilderPanel() {
               <SortableFieldItem key={field.id} id={field.id}>
                 {(dragHandleProps: any) => (
                   <div className="rounded-2xl bg-zinc-400 p-4 space-y-3">
-                    
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        
                         <button
                           {...dragHandleProps}
                           className="cursor-grab active:cursor-grabbing rounded bg-zinc-700 px-3 py-1 text-sm text-white"
@@ -105,7 +104,6 @@ export default function BuilderPanel() {
                       </button>
                     </div>
 
-              
                     <input
                       value={field.label}
                       onChange={(e) =>
@@ -117,7 +115,6 @@ export default function BuilderPanel() {
                       className="w-full rounded border p-2"
                     />
 
-                  
                     <input
                       value={field.name}
                       onChange={(e) =>
@@ -129,7 +126,6 @@ export default function BuilderPanel() {
                       className="w-full rounded border p-2"
                     />
 
-                  
                     {field.type !== "checkbox" && (
                       <input
                         value={field.placeholder}
@@ -143,7 +139,6 @@ export default function BuilderPanel() {
                       />
                     )}
 
-                    
                     {(field.type === "select" || field.type === "radio") && (
                       <input
                         value={field.options?.join(", ") || ""}
@@ -157,7 +152,6 @@ export default function BuilderPanel() {
                       />
                     )}
 
-              
                     <label className="flex items-center gap-2">
                       <input
                         type="checkbox"

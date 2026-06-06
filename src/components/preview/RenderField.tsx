@@ -36,7 +36,7 @@ export default function RenderField({ field }: Props) {
       return (
         <select className="w-full rounded border p-2">
           {field.options?.map((option) => (
-            <option key={option} value={option}>
+            <option className="text-gray-800" key={option} value={option}>
               {option}
             </option>
           ))}
@@ -56,9 +56,9 @@ export default function RenderField({ field }: Props) {
         <div className="space-y-2">
           {field.options?.map((option) => (
             <label key={option} className="flex items-center gap-2">
-              <input type="radio" name={field.name} />
+              <input type="radio" name={field.name} required={field.required} />
 
-              {option}
+              <span>{option}</span>
             </label>
           ))}
         </div>
